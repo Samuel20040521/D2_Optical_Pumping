@@ -1,0 +1,62 @@
+[project]
+name = "modern-physics-experiment-data-analysis"
+version = "0.1.0"
+description = "Reusable template for modern physics experiment data analysis projects."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "matplotlib>=3.8",
+  "numpy>=1.26",
+  "openpyxl>=3.1",
+  "pandas>=2.1",
+  "pydantic>=2.5",
+  "scipy>=1.12",
+  "sympy>=1.13",
+  "uncertainties>=3.2",
+]
+
+[dependency-groups]
+dev = [
+  "ipykernel>=6.29",
+  "jupyter>=1.0",
+  "mypy>=1.8",
+  "pytest>=8.0",
+  "ruff>=0.4",
+]
+
+[tool.uv]
+package = false
+
+[tool.ruff]
+target-version = "py311"
+line-length = 88
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+  "E",
+  "F",
+  "I",
+  "N",
+  "UP",
+  "B",
+  "SIM",
+  "RUF",
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --tb=short"
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+check_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = ["uncertainties.*"]
+ignore_missing_imports = true
