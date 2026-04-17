@@ -47,7 +47,10 @@
 
 ### `data/raw/`
 
-放原始實驗資料。建議把這裡當成只讀區，不要直接修改檔案內容。像是儀器匯出的 `.csv`、`.txt`、手抄後建成的原始表格，都應該先放在這裡。
+放原始實驗資料。建議把這裡當成只讀區，不要直接修改檔案內容。像是儀器匯出的 `.csv`、`.txt`、手抄後建成的原始表格，都應該先放在這裡，下載方式可以使用下列程式碼。
+```
+gdown --folder https://drive.google.com/drive/folders/1oSah8gFO4-Oxz7PDxcv1roB1UgOJDfUz?usp=drive_link -O /Users/dengensheng/Developer/D2_Optical_Pumping/data/raw/
+```
 
 ### `data/interim/`
 
@@ -128,6 +131,10 @@
 - Monte Carlo propagation
 - 不確定度預算表
 
+此模組目前提供：
+
+- `evaluation.py`：包含 `get_combined_ufloat`，幫助你從測量數據中自動計算 A 類與 B 類不確定度。
+
 ### `src/visualization/`
 
 放繪圖邏輯與全域作圖設定。建議將可重用的圖表樣式與繪圖函式集中在這裡，而不是散落在 notebook。
@@ -145,6 +152,21 @@
 放自動化測試。即使只是簡單模板，也建議至少替重要公式或格式化函式加上基本測試，避免之後改壞。
 
 ## 內建工具模組
+
+### `src/uncertainty/evaluation.py`
+
+提供 `get_combined_ufloat()`，用來將一組連續測量數據轉換成包含組合不確定度（A 類 + B 類）的 `ufloat` 物件：
+
+```python
+from src.uncertainty import get_combined_ufloat
+
+# 測量數據與儀器最小刻度
+data = [8.95, 8.94, 8.93]
+result = get_combined_ufloat(data, resolution=0.01)
+
+print(f"{result:.3f}")
+# 8.940+/-0.006
+```
 
 ### `src/analysis/fitting.py`
 

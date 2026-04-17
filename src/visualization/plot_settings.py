@@ -23,6 +23,7 @@ from pathlib import Path
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+from cycler import cycler
 
 DEFAULT_FIGURE_DIR = Path("reports/figures")
 
@@ -46,10 +47,22 @@ class PlotStyle:
     grid_alpha: float = 0.2
     grid_line_width: float = 0.6
     grid_linestyle: str = "--"
-    show_grid: bool = True
+    show_grid: bool = False
     show_top_spine: bool = False
     show_right_spine: bool = False
     legend_frame: bool = False
+    legend_edgecolor: str = "inherit"
+    tick_top: bool = False
+    tick_right: bool = False
+    color_cycle: tuple[str, ...] = (
+        "#4472C4",  # Blue
+        "#E06932",  # Orange
+        "#4EAA72",  # Green
+        "#C4499E",  # Magenta
+        "#4AACC4",  # Cyan
+        "#B07C28",  # Gold
+        "#7B5EA7",  # Purple
+    )
 
     def rc_params(self) -> dict[str, object]:
         return {
@@ -84,7 +97,11 @@ class PlotStyle:
             "grid.linewidth": self.grid_line_width,
             "grid.linestyle": self.grid_linestyle,
             "legend.frameon": self.legend_frame,
+            "legend.edgecolor": self.legend_edgecolor,
             "legend.handlelength": 2.0,
+            "xtick.top": self.tick_top,
+            "ytick.right": self.tick_right,
+            "axes.prop_cycle": cycler(color=list(self.color_cycle)),
         }
 
 
@@ -114,11 +131,73 @@ WIDE_STYLE = PlotStyle(
     grid_alpha=0.3,
 )
 
+BW_STYLE = PlotStyle(
+    figure_size=(8, 6),
+    show_grid=False,
+    show_top_spine=True,
+    show_right_spine=True,
+    tick_top=True,
+    tick_right=True,
+    legend_frame=True,
+    legend_edgecolor="0.7",
+    color_cycle=(
+        "#000000",  # Black
+        "#737373",  # Dark gray
+        "#A6A6A6",  # Medium gray
+        "#4D4D4D",  # Charcoal
+        "#8C8C8C",  # Gray
+        "#BFBFBF",  # Light gray
+        "#262626",  # Near black
+    ),
+)
+
 STYLE_PRESETS = {
     "base": BASE_STYLE,
     "comparison": COMPARISON_STYLE,
     "wide": WIDE_STYLE,
+    "bw": BW_STYLE,
 }
+
+
+# ── Black & White series helpers ──────────────────────────────────────
+BW_MARKERS = ("o", "s", "^", "d", "v", "D", "p")
+BW_COLORS = ("black", "0.45", "0.65", "0.30", "0.55", "0.75", "0.15")
+BW_LINESTYLES = ("-", "--", "-.", ":", (0, (3, 1, 1, 1)), (0, (5, 2)))
+BW_HATCHES = ("...", "///", "xxx", "\\\\\\", "+++", "ooo")
+BW_FILLS = ("0.92", "0.85", "0.95", "0.88", "0.82", "0.90")
+BW_EDGES = ("0.50", "0.35", "0.55", "0.40", "0.45", "0.30")
+
+
+def bw_series_style(index: int) -> dict[str, object]:
+    """Return marker, color, linestyle kwargs for the *index*-th data series."""
+    return {
+        "marker": BW_MARKERS[index % len(BW_MARKERS)],
+        "color": BW_COLORS[index % len(BW_COLORS)],
+        "linestyle": BW_LINESTYLES[index % len(BW_LINESTYLES)],
+    }
+
+
+def bw_errorbar_style(index: int, *, capsize: int = 4) -> dict[str, object]:
+    """Return errorbar kwargs for the *index*-th data series."""
+    return {
+        "fmt": BW_MARKERS[index % len(BW_MARKERS)],
+        "color": BW_COLORS[index % len(BW_COLORS)],
+        "ecolor": BW_COLORS[index % len(BW_COLORS)],
+        "capsize": capsize,
+        "capthick": 1.2,
+        "elinewidth": 1.2,
+    }
+
+
+def bw_fill_style(index: int) -> dict[str, object]:
+    """Return axvspan kwargs for the *index*-th shaded region."""
+    return {
+        "facecolor": BW_FILLS[index % len(BW_FILLS)],
+        "hatch": BW_HATCHES[index % len(BW_HATCHES)],
+        "edgecolor": BW_EDGES[index % len(BW_EDGES)],
+        "alpha": 0.4,
+        "linewidth": 0.5,
+    }
 
 
 def get_style(style: str | PlotStyle = "base") -> PlotStyle:
