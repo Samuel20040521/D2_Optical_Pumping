@@ -1,327 +1,173 @@
-# Modern Physics Experiment Data Analysis Template
+# D2 Optical Pumping — 銣原子光學幫浦資料分析
 
-這個 repository 是給近代物理實驗或一般實驗課使用的資料分析模板。它把 `D1_temp` 中較通用、可重複使用的部分整理成一個乾淨的 GitHub template，目標是讓每次開新實驗專案時，都能直接沿用一致的資料夾結構、分析模組與 Python 環境。
+近代物理實驗 D2「銣原子光學幫浦」的完整資料分析倉庫。我們在同一個鈉銣蒸氣管上做四個串接的子實驗——共振吸收、低場 Zeeman、二次 Zeeman (Breit–Rabi) 與暫態幫浦動力學——並把整條校正鏈與不確定度傳遞做到自洽。
 
-專案重點：
+主要結果（細節詳見 [reports/main.pdf](reports/main.pdf)）：
 
-- 保留原始資料與處理後資料的分層，方便追溯
-- 用 `src/` 集中放可重用的分析與繪圖程式
-- 用 `uv` 管理 Python 版本、虛擬環境與依賴
-- 預先放入常用的 `fitting.py` 與 `formatting.py`
+- **4a 共振吸收**：由三段熱循環的 Beer–Lambert 擬合得到有效吸收截面 $\sigma_{\mathrm{exp}} = 1.766(50)\times 10^{-16}\ \mathrm{m^2}$。
+- **4b 低場 Zeeman**：斜率比 $m_{87}/m_{85} = 1.554(22)$ 確定核自旋 $I_{87}=3/2$、$I_{85}=5/2$；sweep coil 校正常數 $k_{\mathrm{sweep}} = 0.6397(39)\ \mathrm{G/A}$，殘餘地磁 $|B_0| = 0.2263(24)\ \mathrm{G}$；延伸到 200 kHz–1 MHz 得 main coil 校正常數 $k_{\mathrm{main}} = 8.579(24)\ \mathrm{G/A}$。
+- **4c 二次 Zeeman**：在 $B \simeq 7\ \mathrm{G}$ 解析出 Breit–Rabi fan，$^{87}\mathrm{Rb}$ 五條、$^{85}\mathrm{Rb}$ 全十條躍遷與數值解一致到 0.1%。
+- **4d 暫態動力學**：幫浦時間常數比 $\tau_p^{87}/\tau_p^{85} = 1.20005(22)$，與 Franzen–Emslie 速率方程模擬 (1.164) 在 3% 內吻合，Rabi 振盪頻率 $f_R = 3035.062(80)\ \mathrm{Hz}$ 並符合 $T \propto 1/V_{\mathrm{rf}}$。
 
-## 資料夾結構
+---
+
+## 資料夾分工
 
 ```text
 .
-├── .github/
-│   └── copilot-instructions.md
-├── data/
-│   ├── raw/
-│   ├── interim/
-│   ├── processed/
-│   └── metadata/
-├── docs/
-├── notebook/
-├── reports/
-│   ├── figures/
-│   └── tables/
-├── src/
-│   ├── analysis/
-│   │   ├── fitting.py
-│   │   └── formatting.py
-│   ├── io/
-│   ├── preprocessing/
-│   ├── uncertainty/
-│   └── visualization/
-├── tests/
-├── .gitignore
-├── .python-version
-└── pyproject.toml
+├── data/raw/               # 從 Google Drive 下載的原始示波器資料
+├── notebook/               # Jupyter Notebook：所有資料處理細節都在這
+│   ├── 4a.ipynb            #   共振吸收 (Beer–Lambert)
+│   ├── 4b_pre.ipynb        #   4b/4c 共用的 cycle 切割 + dip 偵測 pipeline
+│   ├── 4b.ipynb            #   低場 Zeeman 與磁場校正
+│   ├── 4c.ipynb            #   Breit–Rabi 二次 Zeeman
+│   ├── 4d.ipynb            #   暫態：optical pumping τ_p 與 Rabi ringing
+│   └── Optical_Pumping_Rate_Equation_Model.ipynb  # Franzen–Emslie 數值模擬
+├── src/                    # 可重用的分析模組（被 notebook 匯入）
+│   ├── analysis/           #   含誤差傳遞的線性／非線性回歸與格式化
+│   ├── signal/             #   週期切割 (segmentation) 與 dip detection
+│   ├── logic/              #   dip → quantum number tag 的分類邏輯
+│   ├── uncertainty/        #   A 類 + B 類組合不確定度
+│   ├── utils/              #   檔名／metadata 解析
+│   └── visualization/      #   黑白列印友善的圖風格與 figure helpers
+├── reports/                # LaTeX 報告原始檔
+│   ├── main.tex            #   主文件（編譯後輸出 main.pdf）
+│   ├── main.pdf            #   完整報告
+│   ├── section/            #   各章節 .tex（abstract / 4a / 4b / 4c / 4d / Q&A / Appendix）
+│   ├── Apparatus/, Theory/ #   附錄性質的儀器與理論說明
+│   ├── reference.bib       #   參考文獻
+│   ├── theory pics/        #   理論章節用圖
+│   └── figures/            #   notebook 輸出的 PDF/PNG 圖檔（被 main.tex 引用）
+├── docs/                   # 參考資料（lab manual 影像與 markdown）
+│   ├── Berkeley/           #   Berkeley OP 講義
+│   └── OP1-B/              #   TeachSpin OP1-B 手冊
+├── pyproject.toml          # uv 管理的依賴
+├── .python-version         # 鎖定 Python 版本
+└── uv.lock
 ```
 
-## 每個資料夾的用途
+每個資料夾的職責：
 
-### `.github/`
+- **`notebook/`**：你執行分析的入口。每一本 notebook 對應報告中的一個小節，並把所有探索性的處理流程（讀檔、切 cycle、找 dip、擬合、畫圖、輸出）寫在 cell 裡。
+- **`src/`**：當 notebook 裡的某段邏輯穩定下來、會被多本 notebook 重用時，就搬到 `src/`。例如 `src/signal/segmentation.py` 把示波器 trace 依 sweep 週期切段，`src/logic/tagger.py` 把找到的 dip 對到 $(F, m_F)$ 量子數。
+- **`data/raw/`**：原始示波器與量測檔案，**只讀**。請用下面 §3 的指令從 Google Drive 下載。
+- **`reports/figures/`**：notebook 跑完會自動把圖輸出到這裡，並被 `reports/main.tex` 直接引用。
+- **`reports/`**（除了 `figures/`）：寫好的 LaTeX 報告。`main.tex` 會 `\input` `section/*.tex`，這些章節是把 notebook 的數值結果加上物理討論後的最終文字版本。
+- **`docs/`**：lab manual 與背景參考。Berkeley 與 TeachSpin OP1-B 兩套手冊原文（已轉成 markdown + 抽出的圖），用來查公式與儀器規格。
 
-放 GitHub 相關設定。這裡目前提供 `copilot-instructions.md`，讓 AI 工具或協作者更容易理解這個專案的分析流程與資料管理原則。
+---
 
-### `data/raw/`
-
-放原始實驗資料。建議把這裡當成只讀區，不要直接修改檔案內容。像是儀器匯出的 `.csv`、`.txt`、手抄後建成的原始表格，都應該先放在這裡，下載方式可以使用下列程式碼。
-```
-gdown --folder https://drive.google.com/drive/folders/1oSah8gFO4-Oxz7PDxcv1roB1UgOJDfUz?usp=drive_link -O /Users/dengensheng/Developer/D2_Optical_Pumping/data/raw/
-```
-
-### `data/interim/`
-
-放中間清理結果，例如：
-
-- 改過欄位名稱的資料
-- 合併後但還沒正式定稿的表格
-- 暫時做過單位轉換或格式整理的資料
-
-### `data/processed/`
-
-放最終可直接分析或畫圖的資料。這些檔案通常已經完成：
-
-- 單位統一
-- 校正
-- 誤差欄位補齊
-- 分析前的欄位整理
-
-### `data/metadata/`
-
-放輔助說明資料，例如：
-
-- 欄位定義
-- 實驗條件說明
-- 儀器解析度與校正常數
-- 樣本或批次對照表
-
-### `docs/`
-
-放方法說明、分析筆記、實驗流程整理、期末報告草稿等文字文件。當某段分析邏輯太長，不適合只寫在 notebook 註解裡時，可以移到這裡。
-
-### `notebook/`
-
-放 Jupyter Notebook。適合做：
-
-- 初步資料探索
-- 嘗試擬合流程
-- 圖表樣式微調
-- 課堂展示
-
-當 notebook 裡的程式變穩定後，建議把核心邏輯搬到 `src/`。
-
-### `reports/figures/`
-
-放輸出的圖檔，例如 PDF、PNG、SVG。通常是要貼進報告或簡報的圖。
-
-### `reports/tables/`
-
-放整理好的表格輸出，例如：
-
-- CSV
-- LaTeX table
-- Markdown table
-
-### `src/analysis/`
-
-放數值分析、擬合、回歸、物理量推導等核心函式。
-
-目前內含：
-
-- `fitting.py`：提供帶有誤差傳播概念的線性回歸函式
-- `formatting.py`：把 `uncertainties.ufloat` 格式化成物理報告常用的括號表示法
-
-### `src/io/`
-
-放讀寫資料的函式，例如讀取 CSV、Excel、TXT、儀器輸出格式等。
-
-### `src/preprocessing/`
-
-放資料清理、重塑、合併、欄位整理、單位轉換等前處理邏輯。
-
-### `src/uncertainty/`
-
-放不確定度分析工具，例如：
-
-- Type A / Type B 不確定度
-- 誤差傳遞
-- Monte Carlo propagation
-- 不確定度預算表
-
-此模組目前提供：
-
-- `evaluation.py`：包含 `get_combined_ufloat`，幫助你從測量數據中自動計算 A 類與 B 類不確定度。
-
-### `src/visualization/`
-
-放繪圖邏輯與全域作圖設定。建議將可重用的圖表樣式與繪圖函式集中在這裡，而不是散落在 notebook。
-
-模板已經提供統一的作圖接口與 style preset，放在 `src/visualization/plot_settings.py`。你之後如果想沿用 `D1_temp` 的畫圖風格，通常只需要改：
-
-- `xlabel`
-- `ylabel`
-- `figsize`
-
-其他像字體、數學字型、刻度方向、格線、輸出 DPI、圖例風格、輸出路徑等，都可以保持一致。
-
-### `tests/`
-
-放自動化測試。即使只是簡單模板，也建議至少替重要公式或格式化函式加上基本測試，避免之後改壞。
-
-## 內建工具模組
-
-### `src/uncertainty/evaluation.py`
-
-提供 `get_combined_ufloat()`，用來將一組連續測量數據轉換成包含組合不確定度（A 類 + B 類）的 `ufloat` 物件：
-
-```python
-from src.uncertainty import get_combined_ufloat
-
-# 測量數據與儀器最小刻度
-data = [8.95, 8.94, 8.93]
-result = get_combined_ufloat(data, resolution=0.01)
-
-print(f"{result:.3f}")
-# 8.940+/-0.006
-```
-
-### `src/analysis/fitting.py`
-
-提供 `excel_style_regression_with_propagation()`，可做線性回歸並把 `x`、`y` 的不確定度傳遞到斜率與截距。這類功能很適合聲速、衰減、校正常數等線性模型分析。
-
-### `src/analysis/formatting.py`
-
-提供 `ufloat_to_paren()`，可把 `uncertainties.ufloat` 轉成物理報告慣用格式，例如：
-
-```python
-from uncertainties import ufloat
-from src.analysis.formatting import ufloat_to_paren
-
-value = ufloat(1.34836, 0.00043)
-print(ufloat_to_paren(value))
-# 1.34836(43)
-```
-
-## 內建作圖接口
-
-`D1_temp/src/visualization/` 的共通格式，已經整理成 template 可直接重用的接口：
-
-- serif 字體搭配 STIX 數學字型
-- 預設圖大小 `6.5 x 4.5`
-- `savefig.dpi = 300`
-- inward ticks 與 minor ticks
-- 淡色虛線 grid
-- 預設不顯示上、右邊框
-- 預設無外框 legend
-
-如果你要畫一般分析圖：
-
-```python
-import numpy as np
-
-from src.visualization import create_figure, save_figure
-
-x = np.linspace(0, 10, 100)
-y = np.sin(x)
-
-fig, ax = create_figure(
-    xlabel="Distance [mm]",
-    ylabel="Signal [a.u.]",
-    figsize=(6.5, 4.5),
-)
-
-ax.plot(x, y, label="data")
-ax.legend()
-
-save_figure(fig, "example_plot.pdf")
-```
-
-如果你要先套用比較圖或寬圖 preset，再自己手動建立多子圖版面：
-
-```python
-import matplotlib.pyplot as plt
-
-from src.visualization import apply_plot_style
-
-apply_plot_style("comparison")
-fig, axes = plt.subplots(1, 2, figsize=(10, 13), constrained_layout=True)
-```
-
-目前提供三種 preset：
-
-- `base`：一般單張分析圖，對應 `D1_temp` 的主流格式
-- `comparison`：大型比較圖，對應雙欄或點位標註很多的圖
-- `wide`：超寬橫式比較圖，對應 `PHY11` 那種長條型展示
-
-## 用 `uv` 建立環境
+## 從零跑通：環境 → 資料 → Notebook
 
 ### 1. 安裝 `uv`
 
-如果你的系統還沒有 `uv`，先安裝它：
-
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
-```
-
-安裝完成後重新打開終端機，確認版本：
-
-```bash
+# 重開 shell 後驗證
 uv --version
 ```
 
-### 2. 建立專案環境
+### 2. 建立虛擬環境並安裝依賴
 
-進入專案根目錄後執行：
+在專案根目錄執行：
 
 ```bash
 uv sync --group dev
 ```
 
-這個指令會：
+這會根據 `pyproject.toml` 與 `uv.lock` 在 `.venv/` 建出環境，並安裝 `numpy`、`scipy`、`pandas`、`matplotlib`、`uncertainties`、`sympy`、Jupyter、`ipykernel` 等。
 
-- 建立 `.venv/`
-- 安裝 `pyproject.toml` 中的依賴
-- 安裝 notebook、pytest、ruff 等開發工具
+### 3. 註冊 Jupyter kernel（使用 `.venv`）
 
-### 3. 常用指令
+```bash
+uv run python -m ipykernel install --user \
+  --name d2-optical-pumping \
+  --display-name "Python (.venv) D2"
+```
 
-執行 notebook：
+之後在 VS Code 或 Jupyter 介面打開 notebook 時，把 kernel 切到 **Python (.venv) D2** 即可。
+
+### 4. 下載原始資料到 `data/raw/`
+
+原始檔放在 Google Drive，用 `gdown` 拉下來：
+
+```bash
+uv tool install gdown   # 若尚未安裝
+gdown --folder "https://drive.google.com/drive/folders/1oSah8gFO4-Oxz7PDxcv1roB1UgOJDfUz?usp=drive_link" \
+      -O data/raw/
+```
+
+下載完成後 `data/raw/D2_Optical_Pumping/` 底下會有四個量測日的子資料夾：
+
+| 子資料夾 | 內容 | 對應 notebook |
+| --- | --- | --- |
+| `0323/` | Beer–Lambert 三段熱循環的電壓 vs 溫度 (`run{1,2,3}_*.dat`) + Killian 密度表 | `4a.ipynb` |
+| `0330/` | 低場 Zeeman dip 掃描 (`85_Q.csv`、`87_Q.csv`、`B0.csv`) | `4b.ipynb` |
+| `0402/` | RF 振幅掃描 (`{85,87}_{1,2,3}Vpp.csv`) | `4d.ipynb` |
+| `0413/` | 高頻磁場校正與 Breit–Rabi (`*KHZ_*.csv`、`{85,87}_Q.ZEEMAN.csv`) | `4b.ipynb`、`4c.ipynb` |
+
+### 5. 執行分析
+
+啟動 Jupyter：
 
 ```bash
 uv run jupyter lab
 ```
 
-執行測試：
+建議的執行順序（與報告章節對應）：
+
+1. **`4a.ipynb`** — 共振吸收、Beer–Lambert 擬合、$\sigma_{\mathrm{exp}}$。
+2. **`4b_pre.ipynb`** — 4b/4c 共用的 pipeline：把示波器 trace 依 sweep 切 cycle、找出 dip、依 quantum number 標記。產生中介資料供 4b、4c 使用。
+3. **`4b.ipynb`** — 低場 Zeeman、核自旋判定、sweep / main coil 校正。
+4. **`4c.ipynb`** — Breit–Rabi 數值解、與量測 dip 比對。
+5. **`4d.ipynb`** — 幫浦時間常數 $\tau_p$ 擬合、CH2 ringing 的阻尼正弦擬合、$f_R(V_{\mathrm{rf}})$ 線性回歸。
+6. **`Optical_Pumping_Rate_Equation_Model.ipynb`** — 由 Clebsch–Gordan 係數出發的多能階速率方程，作為 4d 觀察到 $\tau_p^{87} > \tau_p^{85}$ 的理論交叉檢查。
+
+每本 notebook 跑完會把對應的 PDF 圖輸出到 `reports/figures/`，這些檔名會直接對應到 `reports/main.tex` 的 `\includegraphics` 引用。
+
+### 6. 編譯報告（可選）
+
+報告以 XeLaTeX + biber 編譯（因為使用 `xeCJK`）：
 
 ```bash
-uv run pytest
+cd reports
+latexmk -xelatex -bibtex main.tex
 ```
 
-執行 Python 腳本：
+或直接看已編好的 [reports/main.pdf](reports/main.pdf)。
+
+---
+
+## 常用指令
 
 ```bash
-uv run python path/to/script.py
+uv sync --group dev                    # 安裝 / 同步依賴
+uv run jupyter lab                     # 啟動 notebook
+uv run pytest                          # 執行測試
+uv run python path/to/script.py        # 執行單一腳本
+uv add <package>                       # 新增依賴
 ```
 
-新增套件：
+---
 
-```bash
-uv add seaborn
-```
+## `src/` 內的可重用模組
 
-新增開發用套件：
+| 模組 | 用途 |
+| --- | --- |
+| `src.uncertainty.get_combined_ufloat(data, resolution)` | 從重複量測值組合 A 類 + B 類不確定度，回傳 `ufloat`。 |
+| `src.analysis.fitting.excel_style_regression_with_propagation` | 線性回歸並把 $x$、$y$ 不確定度傳遞到斜率／截距。 |
+| `src.analysis.fitting.nonlinear_regression_with_propagation` | 一般非線性模型擬合，回傳含不確定度的參數與協方差。 |
+| `src.analysis.formatting.ufloat_to_paren` | 把 `ufloat` 格式化成物理慣用的括號表示（如 `1.34836(43)`）。 |
+| `src.signal.segmentation.extract_valid_cycles` | 把示波器 trace 依 sweep 訊號切成單一 sweep 週期。 |
+| `src.signal.detection.detect_dips` | 從切好的 cycle 中找 Zeeman 吸收 dip。 |
+| `src.logic.tagger.assign_tags` | 把找到的 dip 對到 $(F, m_F \to m_F')$ quantum number。 |
+| `src.utils.file_parser.parse_metadata` | 從檔名解析量測條件（同位素、頻率、Vpp 等）。 |
+| `src.visualization.plot_settings` | 統一的 matplotlib 風格（serif、STIX、黑白列印友善），以及 `create_figure` / `save_figure` helper。 |
 
-```bash
-uv add --group dev black
-```
-
-### 4. Python 版本
-
-目前模板預設使用 Python 3.11，並寫在 `.python-version`。如果你的系統已安裝 `uv`，通常可以直接讓 `uv` 幫你處理對應環境。
-
-## 建議工作流程
-
-1. 把原始資料放到 `data/raw/`
-2. 在 `notebook/` 或 `src/preprocessing/` 先做整理
-3. 中間產物放到 `data/interim/`
-4. 最終可分析資料放到 `data/processed/`
-5. 在 `src/analysis/` 做擬合、誤差分析與物理量計算
-6. 在 `src/visualization/` 產生圖表
-7. 把輸出圖表與表格放到 `reports/`
-
-## 如何把這個 repo 當成 GitHub Template
-
-這個資料夾內容已經整理成適合做 template 的形式。若你要在 GitHub 上正式啟用 Template Repository，還需要在 GitHub 網站上做一次設定：
-
-1. 先把這個 repo push 到 GitHub
-2. 進入該 repository 的 `Settings`
-3. 勾選 `Template repository`
-4. 之後就可以用 `Use this template` 建立新實驗專案
+---
 
 ## 備註
 
-- `reports/figures/`、`reports/tables/`、`data/interim/`、`data/processed/` 預設在 `.gitignore` 中忽略實際輸出，但保留 `.gitkeep` 以維持結構
-- 如果某次實驗需要額外模組，例如頻譜分析、影像處理、非線性擬合，可以直接在 `src/` 下擴充
+- `data/raw/`、`reports/figures/` 內容大多由 notebook 或下載產生。`main.pdf`、報告原始碼與 `reports/figures/` 會被版本控制，原始資料則靠 `gdown` 重建。
+- LaTeX 編譯產物（`*.aux`、`*.log`、`*.bbl` 等）已在 `.gitignore` 排除。
+- 若要驗證安裝，最快的健全測試是直接跑 `4a.ipynb`：它只用到 `0323/` 的小檔案，幾秒內就能跑完並產生 `4a_T_I_plot.pdf` 與 `4a_Combined_Fit_Hysteresis.pdf`。

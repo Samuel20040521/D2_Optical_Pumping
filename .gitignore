@@ -8,16 +8,13 @@ __pycache__/
 *.egg-info/
 *.pyc
 
-data/interim/*
-!data/interim/.gitkeep
-data/processed/*
-!data/processed/.gitkeep
+# Raw data is pulled from Google Drive via gdown; do not commit
 data/raw/*
 !data/raw/.gitkeep
-reports/figures/*
-!reports/figures/.gitkeep
-reports/tables/*
-!reports/tables/.gitkeep
+
+# Notebook intermediate / processed outputs are reproducible from raw data
+data/interim/*
+data/processed/*
 
 # LaTeX general
 *.aux

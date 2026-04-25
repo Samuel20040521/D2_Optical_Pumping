@@ -1,0 +1,158 @@
+\subsection{Magnetic fields}
+
+All DC magnetic fields are produced by Helmholtz coil pairs wound with copper wire on
+phenolic bobbins. Three independent coil pairs are used: the main horizontal field coil,
+the horizontal sweep field coil, and the vertical compensating field coil.
+ 
+\subsubsection*{Helmholtz Coil Field}
+ 
+A Helmholtz pair consists of two identical circular coils of radius $R$, each with $N$
+turns, separated by a distance equal to $R$. The on-axis field at the midpoint between
+the two coils is obtained by summing the Biot-Savart contributions from each coil.
+For a single circular loop of radius $R$ carrying current $I$, the axial field at
+distance $x$ from the centre is:
+\begin{equation}
+    B_x = \frac{\mu_0 I R^2}{2(R^2 + x^2)^{3/2}}
+\end{equation}
+For the Helmholtz configuration, the two coils are placed at $x = \pm R/2$. The total
+field at the midpoint ($x = 0$) is:
+\begin{equation}
+    B = 2 \times \frac{\mu_0 N I R^2}{2\left(R^2 + (R/2)^2\right)^{3/2}}
+      = \frac{\mu_0 N I R^2}{\left(\frac{5}{4}R^2\right)^{3/2}}
+      = \frac{\mu_0 N I}{R}\left(\frac{4}{5}\right)^{3/2}
+\end{equation}
+Evaluating the numerical prefactor:
+\begin{equation}
+    B = \frac{8}{\sqrt{125}}\,\frac{\mu_0 N I}{R}
+      \approx 0.7155\,\frac{\mu_0 N I}{R}
+\end{equation}
+In Gaussian units, this becomes:
+\begin{equation}
+    B\ (\text{gauss}) = 8.991\times10^{-3}\,\frac{NI}{R}
+\end{equation}
+where $I$ is in amperes and $R$ is in metres. The uniformity of the Helmholtz field is
+guaranteed by the vanishing of the first and second derivatives of $B$ at the midpoint:
+\begin{equation}
+    \frac{\partial B}{\partial x}\bigg|_{x=0} = 0,
+    \qquad
+    \frac{\partial^2 B}{\partial x^2}\bigg|_{x=0} = 0
+\end{equation}
+so the field is uniform to second order in $x/R$.
+ 
+\subsubsection*{Coil Specifications}
+ 
+The properties of the three coil pairs are summarised in Table~\ref{tab:coils}.
+ 
+\begin{table}[h]
+    \centering
+    \begin{tabular}{lcccc}
+        \hline
+        Coil & Mean radius & Turns/side & Field/Amp & Max.\ field \\
+             & (cm)        &            & ($10^{-4}$~T/A) & ($10^{-4}$~T) \\
+        \hline
+        Vertical   & 11.735 & 20  & 1.5 & 1.5 \\
+        Horizontal & 15.790 & 154 & 8.8 & 22.0 \\
+        Sweep      & 16.390 & 11  & 0.60 & 0.60 \\
+        \hline
+    \end{tabular}
+    \caption{Magnetic field coil specifications.}
+\end{table}
+ 
+\subsubsection*{Current-Regulated Field Control}
+ 
+Each coil pair is driven by a voltage-to-current converter circuit. The reference
+voltage $V_{\text{ref}}$ sets the voltage across a sense resistor $R_s$, thereby
+fixing the current through the coil:
+\begin{equation}
+    I_{\text{coil}} = \frac{V_{\text{ref}}}{R_s}
+\end{equation}
+The magnetic field is then:
+\begin{equation}
+    B = \frac{8}{\sqrt{125}}\,\frac{\mu_0 N}{R} \cdot \frac{V_{\text{ref}}}{R_s}
+\end{equation}
+The sense resistors for the three coil pairs are:
+\begin{equation}
+    R_s^{\text{vertical}} = 1\ \Omega, \qquad
+    R_s^{\text{horizontal}} = 0.5\ \Omega, \qquad
+    R_s^{\text{sweep}} = 1\ \Omega
+\end{equation}
+The voltage across $R_s$ is monitored via front-panel tip jacks and used to determine
+the coil current accurately.
+ 
+\subsubsection*{Horizontal Main Field}
+ 
+The main horizontal field coil ($R = 15.79$~cm, $N = 154$ turns/side) produces the
+primary static field along the optical axis. With the internal power supply, the maximum
+current is $\approx 1.0$~A, giving:
+\begin{equation}
+    B_{\text{max}} = 8.8\times10^{-4}\ \text{T/A} \times 1.0\ \text{A}
+                   = 8.8\times10^{-4}\ \text{T} = 8.8\ \text{gauss}
+\end{equation}
+When an external power supply is used (max.\ 40~V, 3.0~A), the coil resistance at room
+temperature is $R_{\text{coil}} \approx 10\ \Omega$, rising to $\approx 12\ \Omega$ at
+high current due to Joule heating. The temperature coefficient of resistance for copper
+gives:
+\begin{equation}
+    R(T) = R_0\left[1 + \alpha_{\text{Cu}}(T - T_0)\right],
+    \qquad \alpha_{\text{Cu}} = 3.9\times10^{-3}\ \text{K}^{-1}
+\end{equation}
+The fractional change in resistance (and hence in the calibration factor) over a
+temperature rise of $\Delta T \approx 50$~K is:
+\begin{equation}
+    \frac{\Delta R}{R_0} = \alpha_{\text{Cu}}\,\Delta T
+    = 3.9\times10^{-3} \times 50 \approx 19.5\%
+\end{equation}
+This must be accounted for when high-current calibrations are performed.
+ 
+\subsubsection*{Horizontal Sweep Field}
+ 
+The sweep field coil ($R = 16.39$~cm, $N = 11$ turns/side) is wound on top of the
+main horizontal coil. Its reference voltage is the sum of three contributions:
+\begin{equation}
+    V_{\text{ref}}^{\text{sweep}} = V_{\text{start}} + V_{\text{ramp}}(t) + V_{\text{mod}}
+\end{equation}
+The ramp voltage $V_{\text{ramp}}(t)$ increases linearly from 0 to $V_{\text{range}}$
+over a sweep time $t_s \in [1,\,1000]$~s:
+\begin{equation}
+    V_{\text{ramp}}(t) = \frac{V_{\text{range}}}{t_s}\,t, \qquad 0 \leq t \leq t_s
+\end{equation}
+The corresponding field sweep rate is:
+\begin{equation}
+    \dot{B} = \frac{8}{\sqrt{125}}\,\frac{\mu_0 N}{R\,R_s}\cdot
+              \frac{V_{\text{range}}}{t_s}
+\end{equation}
+The modulation voltage $V_{\text{mod}}$ allows a small sinusoidal or square-wave
+modulation of the field for lock-in detection:
+\begin{equation}
+    V_{\text{mod}} = A_{\text{mod}}\,f(t), \qquad
+    \frac{V_{\text{mod}}}{B_{\text{mod}}} \approx 1\ \text{V per}\ 10\ \text{mG}
+\end{equation}
+ 
+\subsubsection*{Vertical Compensating Field}
+ 
+The vertical coil ($R = 11.735$~cm, $N = 20$ turns/side) compensates for the vertical
+component of the Earth's magnetic field $B_{\text{Earth}}^{\perp}$. In Buffalo, NY
+(geomagnetic latitude $\approx 53°$), the vertical component is approximately:
+\begin{equation}
+    B_{\text{Earth}}^{\perp} = B_{\text{Earth}}\sin\lambda_m
+    \approx 5\times10^{-5}\ \text{T} \times \sin 53°
+    \approx 4.0\times10^{-5}\ \text{T} = 0.40\ \text{gauss}
+\end{equation}
+The required compensating current is:
+\begin{equation}
+    I_{\text{comp}} = \frac{B_{\text{Earth}}^{\perp}}{\left(8/\sqrt{125}\right)\mu_0 N/R}
+    \approx 0.33\ \text{A}
+\end{equation}
+The vertical coil is wired so that the field points downward when the red plug is in the
+red jack, which is the correct polarity to cancel the Earth's vertical field in the
+Northern Hemisphere.
+ 
+\subsubsection*{Recorder Output}
+ 
+The recorder output provides a signal proportional to the sweep coil current, derived
+from the voltage across the $1\ \Omega$ sense resistor and amplified with a low-pass
+filter of time constant $\tau = 2$~ms. The conversion factor is:
+\begin{equation}
+    \frac{V_{\text{rec}}}{B_{\text{sweep}}} = 50\ \text{mV per}\ 1\ \text{mG}\ (10\ \mu\text{T})
+\end{equation}
+with an output range of $-13.5$~V to $+13.5$~V.

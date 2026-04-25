@@ -9,14 +9,14 @@ Category 1 (B0 baseline):
 
 Category 2 (low-field RF, freq <= 200 kHz):
     Deepest dip -> "B0";
-    Next dip in time after B0 -> "Rb-85";
-    Following dip -> "Rb-87";
+    Next dip in time after B0 -> "Rb-87";
+    Following dip -> "Rb-85";
     Dips before B0 -> "invalid".
 
 Category 3 (high-field / MAIN, freq > 200 kHz):
-    Deepest dip -> "Rb-85";
-    Next dip in time -> "Rb-87";
-    Dips before Rb-85 -> "invalid".
+    Deepest dip -> "Rb-87";
+    Next dip in time -> "Rb-85";
+    Dips before Rb-87 -> "invalid".
 """
 
 import pandas as pd
@@ -61,17 +61,17 @@ def assign_tags(dips_df: pd.DataFrame, category: int) -> pd.DataFrame:
         # Tag the first two dips after B0
         after = df.index[df.index > deepest]
         if len(after) >= 1:
-            df.loc[after[0], "tag"] = "Rb-85"
+            df.loc[after[0], "tag"] = "Rb-87"
         if len(after) >= 2:
-            df.loc[after[1], "tag"] = "Rb-87"
+            df.loc[after[1], "tag"] = "Rb-85"
 
     elif category == 3:
-        df.loc[deepest, "tag"] = "Rb-85"
-        # Everything before Rb-85 in time is invalid
+        df.loc[deepest, "tag"] = "Rb-87"
+        # Everything before Rb-87 in time is invalid
         df.loc[df.index < deepest, "tag"] = "invalid"
-        # Tag the next dip after Rb-85
+        # Tag the next dip after Rb-87
         after = df.index[df.index > deepest]
         if len(after) >= 1:
-            df.loc[after[0], "tag"] = "Rb-87"
+            df.loc[after[0], "tag"] = "Rb-85"
 
     return df

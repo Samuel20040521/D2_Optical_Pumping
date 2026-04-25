@@ -1,0 +1,106 @@
+\subsection{Rf spectroscopy of $^{85}$Rb and $^{87}$Rb }
+
+\subsubsection*{First-Order Resonance Frequency}
+ 
+In the weak-field (Zeeman) limit, the energy of sublevel $M$ is given by
+Eq.~(\ref{eq:W_hyperfine}) :
+\begin{equation}
+    W(M) = g_F\,\mu_0\,B\,M
+    \label{eq:RF_energy}
+\end{equation}
+An RF magnetic field perpendicular to the static field $B$ drives magnetic dipole
+transitions with $\Delta F = 0$ and $\Delta M = \pm 1$. The resonance condition between
+adjacent sublevels $|F, M\rangle \leftrightarrow |F, M\pm 1\rangle$ gives :
+\begin{equation}
+    h\nu = W(M+1) - W(M) = g_F\,\mu_0\,B
+    \label{eq:RF_resonance}
+\end{equation}
+Solving for the transition frequency :
+\begin{equation}
+    \boxed{\nu = \frac{g_F\,\mu_0}{h}\,B}
+    \label{eq:RF_freq}
+\end{equation}
+Using $\mu_0/h = 1.3996\ \text{MHz/gauss}$, the resonance frequency is linear in $B$
+and independent of $M$ to first order. The $g_F$ values for the two isotopes are :
+\begin{equation}
+    g_F\!\left(^{87}\text{Rb},\,F=2\right) = \frac{1}{2},
+    \qquad
+    g_F\!\left(^{85}\text{Rb},\,F=3\right) = \frac{1}{3}
+    \label{eq:gF_values}
+\end{equation}
+giving a theoretical frequency ratio :
+\begin{equation}
+    \frac{\nu_{87}}{\nu_{85}}
+    = \frac{g_F(^{87}\text{Rb})}{g_F(^{85}\text{Rb})}
+    = \frac{1/2}{1/3} = \frac{3}{2} = 1.5
+    \label{eq:freq_ratio}
+\end{equation}
+ 
+\subsubsection*{Second-Order (Quadratic Zeeman) Correction}
+ 
+At higher fields the energy levels acquire a quadratic dependence on $B$. Introducing
+the mean azimuthal quantum number $\bar{M} = M - \tfrac{1}{2}$, the resonance
+frequencies correct to second order in $B$ are :
+ 
+For the $F = I + \tfrac{1}{2}$ multiplet :
+\begin{equation}
+    \omega_{F,M}^{+} = \frac{\mu_B g_J B}{\hbar(2I+1)}
+    - \frac{2\left(\mu_B g_J - \mu_B g_I/I\right)^2 B^2\,\bar{M}}
+           {(2I+1)(2I+2)\,\hbar\omega_{hf}}
+    \label{eq:BR_plus}
+\end{equation}
+ 
+For the $F = I - \tfrac{1}{2}$ multiplet :
+\begin{equation}
+    \omega_{F,M}^{-} = \frac{\mu_B g_J B}{\hbar(2I+1)}
+    + \frac{2\left(\mu_B g_J + \mu_B g_I(1+1/I)\right)^2 B^2\,\bar{M}}
+           {(2I+1)(2I+2)\,\hbar\omega_{hf}}
+    \label{eq:BR_minus}
+\end{equation}
+where $\hbar\omega_{hf} = (2I+1)A/2$ is the zero-field hyperfine splitting energy.
+To first order in $B$ the frequencies are independent of $\bar{M}$; the second-order
+term introduces a \textbf{quadratic splitting} proportional to $B^2\bar{M}$, which is
+identical for both multiplets.
+ 
+\subsubsection*{Full Breit-Rabi Treatment}
+ 
+Beyond the perturbative regime the resonance fields must be obtained from the full
+Breit-Rabi equation (Eq.~(\ref{eq:breit_rabi})). The transition frequency between levels
+$|F,M\rangle$ and $|F,M-1\rangle$ is :
+\begin{equation}
+    \omega_{F,M} = \frac{W(F,M) - W(F,M-1)}{\hbar}
+    \label{eq:BR_transition}
+\end{equation}
+Since Eq.~(\ref{eq:breit_rabi}) cannot be inverted analytically for $B$, the resonance
+fields are found numerically. For $^{87}$Rb ($I = 3/2$, $F = 2$) there are $2F = 4$
+resolvable single-quantum transitions, and for $^{85}$Rb ($I = 5/2$, $F = 3$) there
+are $2F = 6$.
+ 
+\subsubsection*{Signal and Observation}
+ 
+After optical pumping establishes an excess population in $|M_{\max}\rangle$, an
+on-resonance RF field drives the system back toward thermal equilibrium, reducing the
+transmitted intensity. The fractional change in intensity is :
+\begin{equation}
+    \frac{\Delta I}{I_0}
+    = e^{-\sigma_{\text{pumped}}\,\rho\,\ell}
+    - e^{-\sigma_{\text{eq}}\,\rho\,\ell}
+    \label{eq:RF_signal}
+\end{equation}
+where $\sigma_{\text{pumped}} < \sigma_{\text{eq}}$. Sweeping $B$ at fixed
+$\nu_{\text{RF}}$ traces out a resonance spectrum; each dip corresponds to a specific
+$|F,M\rangle \leftrightarrow |F,M\pm 1\rangle$ transition at the field predicted by
+Eq.~(\ref{eq:BR_transition}).
+ 
+\subsubsection*{Determination of Nuclear Spin}
+ 
+From Eq.~(\ref{eq:gF}), measuring $\nu$ at a known field $B$ yields $g_F$ via
+Eq.~(\ref{eq:RF_freq}). For the $F = I + \tfrac{1}{2}$ state with $J = \tfrac{1}{2}$,
+the nuclear spin follows directly :
+\begin{equation}
+    I = \frac{1}{2}\!\left(\frac{g_J}{g_F} - 1\right)
+    \label{eq:I_from_gF}
+\end{equation}
+Substituting the measured $g_F$ values from Eq.~(\ref{eq:gF_values}) gives
+$I = 3/2$ for $^{87}$Rb and $I = 5/2$ for $^{85}$Rb, consistent with the
+known nuclear spins.

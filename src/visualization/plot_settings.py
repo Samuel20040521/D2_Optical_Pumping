@@ -131,6 +131,47 @@ WIDE_STYLE = PlotStyle(
     grid_alpha=0.3,
 )
 
+PPT_STYLE = PlotStyle(
+    figure_size=(9.0, 5.0),
+    font_size=20,
+    axes_title_size=24,
+    axes_label_size=22,
+    tick_label_size=18,
+    legend_font_size=18,
+    line_width=2.5,
+    marker_size=10,
+    axes_line_width=1.5,
+    show_grid=True,
+    grid_alpha=0.3,
+    show_top_spine=False,
+    show_right_spine=False,
+)
+
+PPT_BW_STYLE = PlotStyle(
+    figure_size=(9.0, 5.0),
+    font_size=20,
+    axes_title_size=24,
+    axes_label_size=22,
+    tick_label_size=18,
+    legend_font_size=18,
+    line_width=2.5,
+    marker_size=10,
+    axes_line_width=1.5,
+    show_grid=True,
+    grid_alpha=0.3,
+    show_top_spine=False,
+    show_right_spine=False,
+    color_cycle=(
+        "#000000",  # Black
+        "#737373",  # Dark gray
+        "#A6A6A6",  # Medium gray
+        "#4D4D4D",  # Charcoal
+        "#8C8C8C",  # Gray
+        "#BFBFBF",  # Light gray
+        "#262626",  # Near black
+    ),
+)
+
 BW_STYLE = PlotStyle(
     figure_size=(8, 6),
     show_grid=False,
@@ -156,6 +197,8 @@ STYLE_PRESETS = {
     "comparison": COMPARISON_STYLE,
     "wide": WIDE_STYLE,
     "bw": BW_STYLE,
+    "ppt": PPT_STYLE,
+    "ppt_bw": PPT_BW_STYLE,
 }
 
 

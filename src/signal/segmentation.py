@@ -17,6 +17,7 @@ def extract_valid_cycles(
     time_data,
     ch3_data,
     duration_range=(0.8, 1.2),
+    min_distance_sec=0.5,
 ):
     """
     Normalise CH3 and extract valid rising-edge sweep segments.
@@ -49,12 +50,12 @@ def extract_valid_cycles(
     dt = float(time_data[1] - time_data[0])
     # Minimum distance between same-type extrema (≈ half the expected
     # full period, so we never double-count within a single half-cycle).
-    min_distance = int(0.5 / dt)
+    min_distance = int(min_distance_sec / dt)
     # Prominence threshold: at least 20 % of the full normalised range
     # so that tiny noise bumps on the ramp are ignored.
     prom = 0.20 * CH3_NORM_MAX
 
-    maxima_idx, _ = find_peaks(ch3_norm,  distance=min_distance, prominence=prom)
+    maxima_idx, _ = find_peaks(ch3_norm, distance=min_distance, prominence=prom)
     minima_idx, _ = find_peaks(-ch3_norm, distance=min_distance, prominence=prom)
 
     # ---- 3. Pair each minimum with its immediately following maximum ----

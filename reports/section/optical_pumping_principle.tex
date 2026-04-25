@@ -1,0 +1,21 @@
+\section{Principle of Optical Pumping}
+
+Optical pumping is a quantum optical process in which resonance radiation is used to redistribute the population of atoms among their internal energy sublevels, creating a non-thermal equilibrium distribution. In this experiment, we study the Rubidium ($Rb$) atom, which naturally occurs as two stable isotopes: $^{85}Rb$ (72\% abundance, $I=5/2$) and $^{87}Rb$ (28\% abundance, $I=3/2$).
+
+\subsection{Energy Level Structure of Rubidium}
+The ground state of Rubidium is $[Kr]5s^1$, denoted by the term symbol $^{2}S_{1/2}$. Optical excitation moves the valence electron to the $5p$ orbital. Due to spin-orbit coupling (fine structure), the $5p$ state splits into $^{2}P_{1/2}$ and $^{2}P_{3/2}$, giving rise to the $D_1$ (794.8 nm) and $D_2$ (780.0 nm) lines, respectively.
+
+In this experiment, we specifically utilize the \textbf{$D_1$ transition} because it allows for more efficient optical pumping. The interaction between the nuclear spin ($I$) and the electron's total angular momentum ($J$) further splits these states into hyperfine levels ($F$). For instance, the ground state of $^{87}Rb$ splits into $F=1$ and $F=2$. In the presence of a weak magnetic field, these $F$ levels split into $2F+1$ magnetic sublevels ($m_F$), which are the focus of our Zeeman resonance study.
+
+\subsection{The Mechanism of Optical Pumping}
+The pumping process utilizes circularly polarized light (e.g., $\sigma^+$ light) and follows strict selection rules:
+\begin{enumerate}
+    \item \textbf{Selective Excitation:} $\sigma^+$ photons carry $+\hbar$ angular momentum, driving transitions with \textbf{$\Delta m_F = +1$}. Atoms in the ground state absorb these photons and are excited to the $^{2}P_{1/2}$ state.
+    \item \textbf{Spontaneous Emission and Relaxation:} The excited atoms remain in the upper state for a short lifetime (approx. 28 ns) before decaying back to the ground state. The selection rules for this spontaneous decay are $\Delta m_F = 0, \pm 1$. Additionally, collisions with buffer gas atoms in the cell help to randomize the excited state populations before decay.
+    \item \textbf{Population Accumulation:} Because the $\sigma^+$ excitation strictly increases $m_F$, while the decay can return atoms to any $m_F$ state, atoms eventually accumulate in the state with the highest $m_F$ (e.g., $F=2, m_F=+2$). At this point, there is no corresponding state in the $^{2}P_{1/2}$ level for a $\Delta m_F = +1$ transition. The atom can no longer absorb the incident light and is trapped in this "dark state."
+\end{enumerate}
+
+\subsection{Transparency and Magnetic Resonance}
+As more atoms are pumped into the dark state, the Rubidium vapor cell becomes "bleached" or transparent, leading to a maximum in the transmitted light intensity measured by the photodetector. 
+
+This equilibrium is disturbed if a radio-frequency (RF) magnetic field is applied. When the RF frequency $\nu$ satisfies the resonance condition $h\nu = g_F \mu_B B$, transitions between adjacent $m_F$ levels are induced ($\Delta m_F = \pm 1$). This redistributes atoms back into states that can absorb the $\sigma^+$ light, causing a measurable \textbf{decrease (dip)} in the transmitted light intensity. By scanning the magnetic field or the RF frequency, we can precisely map the Zeeman splitting and determine the nuclear properties of the isotopes.

@@ -1,0 +1,92 @@
+\subsection{Photon absorption in an alkali atom}
+
+The three lowest electronic states of an alkali atom can be labeled as follows :
+\begin{align}
+    &\text{Ground electronic state:}         && 5s\ ^2S_{1/2} \notag \\
+    &\text{First excited electronic state:}  && 5p\ ^2P_{1/2} \notag \\
+    &\text{Second excited electronic state:} && 5p\ ^2P_{3/2} \notag
+\end{align}
+An electric dipole transition can take place between the $S$ and $P$ states with the
+selection rules :
+\begin{equation}
+    \Delta L = 0,\,\pm 1 \quad (\text{but not } L=0 \to L=0),
+    \qquad \Delta S = 0,
+    \qquad \Delta J = 0,\,\pm 1
+    \label{eq:dipole_selection}
+\end{equation}
+Thus, transitions from the ground state to both excited states are allowed.
+ 
+\subsubsection*{Beer-Lambert Absorption Law}
+ 
+In the optical pumping experiment, we are primarily interested in the absorption of light
+by a volume of gas. Assuming the incident light is resonant with one of the above
+transitions, a fraction of it will be absorbed by the atoms. Once excited, atoms decay back
+to the ground state by spontaneous emission; however, since this emission occurs equally in
+all directions, only a negligible fraction is re-radiated into the outgoing beam.
+ 
+The attenuation of the photon flux through the gas follows :
+\begin{equation}
+    I = I_0\,e^{-\sigma_0 \rho \ell}
+    \label{eq:beer_lambert}
+\end{equation}
+where $I_0$ and $I$ are the incident and outgoing photon flux, $\rho$ is the gas density,
+$\ell$ is the path length through the gas, and $\sigma_0$ is the maximum absorption
+cross-section at the center of the atomic resonance. The absorption coefficient $k_0$ is
+related to $\sigma_0$ by :
+\begin{equation}
+    k_0 = \sigma_0\,\rho
+    \label{eq:abs_coeff}
+\end{equation}
+For a line broadened only by the Doppler effect, the maximum absorption coefficient is :
+\begin{equation}
+    k_0 = \frac{\lambda_0^2}{8\pi}\cdot\frac{g_2}{g_1}\cdot\frac{\rho}{\Delta\nu_D\,\tau}
+    \label{eq:k0}
+\end{equation}
+where $\lambda_0$ is the wavelength at the center of the absorption line, $\Delta\nu_D$ is
+the Doppler width, $g_1$ and $g_2$ are the statistical weights of the lower and upper
+states respectively, and $\tau$ is the radiative lifetime of the upper electronic state.
+The Doppler width can be estimated from :
+\begin{equation}
+    \Delta\nu_D = \nu_0 \times 3\times10^{-7}
+                  \left(\frac{T}{M}\right)^{1/2}
+    \label{eq:doppler_width}
+\end{equation}
+where $\nu_0$ is the transition frequency, $T$ is the absolute temperature of the absorbing
+gas, and $M$ is the atomic mass.
+ 
+\subsubsection*{Selection Rules with Hyperfine Structure}
+ 
+When hyperfine structure is taken into account, additional selection rules must be applied
+for the total angular momentum quantum number $F$ and its projection $M$:
+\begin{equation}
+    \Delta F = 0,\,\pm 1,
+    \qquad
+    \Delta M = 0,\,\pm 1
+    \label{eq:hfs_selection}
+\end{equation}
+In the optical pumping experiment, the incident light propagates parallel to the applied
+magnetic field and is circularly polarized, so that only transitions with $\Delta M = +1$
+(or $\Delta M = -1$) are allowed.
+ 
+\subsubsection*{Magnetic Dipole Transitions}
+ 
+We must also consider magnetic dipole transitions, which are approximately $10^5$ times
+weaker than electric dipole transitions. These occur within the hyperfine structure and
+between the magnetic sublevels, and are governed by :
+\begin{equation}
+    \Delta F = 0,\,\pm 1,
+    \qquad
+    \Delta M = 0,\,\pm 1
+    \label{eq:mag_dipole_selection}
+\end{equation}
+In our experiment, the RF magnetic field is perpendicular to the dc magnetic field, so only
+transitions with $\Delta F = 0$ and $\Delta M = \pm 1$ are observable. The $\Delta F = \pm 1$
+transitions occur at RF frequencies of several gigahertz and cannot be observed with this
+apparatus.
+ 
+For allowed electric dipole transitions in emission, the lifetimes of the excited states are
+of the order of $10^{-8}$~s, resulting in a natural linewidth of several hundred MHz. The
+actual linewidth, determined by Doppler broadening, is of the order of 1~GHz. For
+magnetic dipole transitions in the hyperfine structure of the ground electronic state the
+radiative lifetimes are much longer, and collision processes determine the actual linewidths.
+ 

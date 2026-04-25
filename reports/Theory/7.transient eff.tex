@@ -1,0 +1,134 @@
+\subsection{Transient effects}
+
+\label{sec:transient}
+ 
+\subsubsection*{Larmor Precession in the Rotating Frame}
+ 
+In the Zeeman region the resonance frequency is :
+\begin{equation}
+    \omega_0 = \gamma B_0, \qquad \gamma \equiv \frac{g_F\,\mu_0}{\hbar}
+    \label{eq:larmor}
+\end{equation}
+where $\gamma$ is the gyromagnetic ratio. The equation of motion of the total angular
+momentum $\mathbf{F}$ in the presence of both a static field $B_0\hat{z}$ and an RF
+field $\mathbf{B}_{\text{rf}}$ is :
+\begin{equation}
+    \frac{d\mathbf{F}}{dt} = \gamma\,\mathbf{F} \times \mathbf{B}
+    \label{eq:eom}
+\end{equation}
+Transforming to a frame rotating at angular frequency $\omega$ about $\hat{z}$, the
+effective field becomes :
+\begin{equation}
+    \mathbf{B}_{\text{eff}} = \mathbf{B}_0 + \frac{\boldsymbol{\omega}}{\gamma}
+    = \left(B_0 - \frac{\omega}{\gamma}\right)\hat{z} + B_{\text{rf}}\hat{x}'
+    \label{eq:Beff}
+\end{equation}
+so that the equation of motion in the rotating frame reduces to :
+\begin{equation}
+    \frac{\partial \mathbf{F}}{\partial t} = \gamma\,\mathbf{F} \times \mathbf{B}_{\text{eff}}
+    \label{eq:eom_rot}
+\end{equation}
+The magnitude of the effective field is :
+\begin{equation}
+    B_{\text{eff}} = \sqrt{\left(B_0 - \frac{\omega}{\gamma}\right)^2 + B_{\text{rf}}^2}
+    \label{eq:Beff_mag}
+\end{equation}
+with the tipping angle :
+\begin{equation}
+    \cos\theta = \frac{\omega_0 - \omega}{\gamma B_{\text{eff}}},
+    \qquad
+    \sin\theta = \frac{\gamma B_{\text{rf}}}{\gamma B_{\text{eff}}} = \frac{B_{\text{rf}}}{B_{\text{eff}}}
+    \label{eq:theta}
+\end{equation}
+At exact resonance $\omega = \omega_0$, we have $\theta = 90°$ and
+$\mathbf{B}_{\text{eff}} = B_{\text{rf}}\hat{x}'$, so $\mathbf{F}$ precesses about
+$B_{\text{rf}}$ at the Rabi frequency :
+\begin{equation}
+    \Omega_R = \gamma B_{\text{rf}}
+    \label{eq:rabi_freq}
+\end{equation}
+ 
+\subsubsection*{Rate Equations for Two-Level System}
+ 
+Considering only the $M = +2$ and $M = +1$ sublevels, let $p_2$ and $p_1 = 1 - p_2$
+be their occupation probabilities. With equal up/down transition probabilities $b_{12} = b_{21} \equiv b$ :
+\begin{align}
+    \dot{p}_2 &= -b\,p_2 + b\,p_1 = -b(2p_2 - 1) \label{eq:rate2} \\
+    \dot{p}_1 &= +b\,p_2 - b\,p_1 = +b(2p_2 - 1) \label{eq:rate1}
+\end{align}
+Substituting $q \equiv 2p_2 - 1$ :
+\begin{equation}
+    \dot{q} = -2b\,q
+    \label{eq:q_ode}
+\end{equation}
+with the solution :
+\begin{equation}
+    q(t) = q_0\,e^{-2bt}
+    \quad\Longrightarrow\quad
+    p_2(t) = \frac{1}{2} + \delta\,e^{-2bt}
+    \label{eq:p2_solution}
+\end{equation}
+where $\delta = p_2(0) - \tfrac{1}{2}$ is the initial excess population. The RF thus
+drives $p_2$ exponentially toward $\tfrac{1}{2}$, with the $1/e$ time :
+\begin{equation}
+    t_{1/e} = \frac{1}{2b}
+    \label{eq:t1e}
+\end{equation}
+Since $b \propto B_{\text{rf}}^2$, the decay time is \emph{inversely proportional} to
+the RF power.
+ 
+\subsubsection*{Optical Pumping Transient (RF Off $\to$ On)}
+ 
+Before the RF is applied, optical pumping has established :
+\begin{equation}
+    p_2(0) = \frac{1}{2} + \delta_0, \qquad p_1(0) = \frac{1}{2} - \delta_0
+    \label{eq:initial_pop}
+\end{equation}
+When the RF is suddenly switched on at resonance, the net downward transition rate
+exceeds the upward rate by :
+\begin{equation}
+    \dot{p}_2\big|_{t=0^+} = -2b\,\delta_0 < 0
+    \label{eq:initial_rate}
+\end{equation}
+causing an immediate decrease in transmitted light intensity.
+ 
+\subsubsection*{Rabi Oscillations (Damped Ringing)}
+ 
+In the coherent limit (before relaxation damps the motion), $\mathbf{F}$ precesses about
+$\mathbf{B}_{\text{eff}}$ at the Rabi frequency $\Omega_R$. The time-dependent
+population is :
+\begin{equation}
+    p_2(t) = \frac{1}{2} + \left(\frac{1}{2} - p_2^{\text{eq}}\right)\cos(\Omega_R t)\,e^{-t/T_2}
+    \label{eq:rabi_osc}
+\end{equation}
+where $T_2$ is the transverse relaxation time. The period of the ringing is therefore :
+\begin{equation}
+    T_{\text{ring}} = \frac{2\pi}{\Omega_R} = \frac{2\pi}{\gamma B_{\text{rf}}}
+    \label{eq:ring_period}
+\end{equation}
+which is \emph{inversely proportional} to $B_{\text{rf}}$ (and hence to the RF current
+in the coils). For the two isotopes at the same $B_{\text{rf}}$:
+\begin{equation}
+    \frac{T_{85}}{T_{87}} = \frac{\gamma_{87}}{\gamma_{85}}
+    = \frac{g_F(^{87}\text{Rb})}{g_F(^{85}\text{Rb})}
+    = \frac{1/2}{1/3} = \frac{3}{2}
+    \label{eq:period_ratio}
+\end{equation}
+ 
+\subsubsection*{Optical Pumping Time (RF On $\to$ Off)}
+ 
+When the RF is switched off, optical pumping rebuilds the population imbalance. The
+transmitted intensity recovers exponentially :
+\begin{equation}
+    I(t) = I_{\max}\left(1 - e^{-t/\tau_p}\right) + I_{\min}\,e^{-t/\tau_p}
+    \label{eq:pump_recovery}
+\end{equation}
+where the optical pumping time $\tau_p$ satisfies :
+\begin{equation}
+    \frac{1}{\tau_p} = \sum_j b_{j,\text{pump}} + \Gamma_{\text{rel}}
+    \label{eq:pump_time}
+\end{equation}
+with $b_{j,\text{pump}}$ the photon absorption rate and $\Gamma_{\text{rel}}$ the
+collisional relaxation rate. Since $b_{j,\text{pump}} \propto I_{\text{light}}$, the
+pumping time $\tau_p$ is \emph{inversely proportional} to the pumping light intensity.
+Experimentally, $\tau_p$ is of the order of 10--20~ms.

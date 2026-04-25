@@ -1,0 +1,180 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsthm,amssymb,amsbsy}
+\usepackage{fontspec}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{subfig}
+\usepackage{titlesec}
+\usepackage{titling}
+\usepackage{fancyhdr}
+\usepackage{bm}
+\usepackage[unicode=true,pdfborder={0 0 0},bookmarksdepth=-1]{hyperref}
+\usepackage{enumitem}
+\usepackage{setspace}
+\usepackage{siunitx}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{booktabs}
+\newcommand{\gauss}{\ \text{G}}
+% bibliography
+\usepackage[backend=biber,style=numeric,giveninits=true]{biblatex}
+\addbibresource{reference.bib}
+
+% Chinese support (XeLaTeX)
+\usepackage{xeCJK}
+% Windows  & macOS 自動切換字體來源
+\IfFileExists{/Users/dengensheng/Developer/Latexfont/NotoSerifTC.ttf}{
+    \setCJKmainfont{NotoSerifTC.ttf}[
+        Path = /Users/dengensheng/Developer/Latexfont/
+    ]
+}{
+    \setCJKmainfont{Noto Serif CJK TC}
+}
+
+\setlength{\headheight}{15pt}
+\setlength{\droptitle}{-1.5cm}
+\parindent=0pt
+\onehalfspacing
+\renewcommand{\arraystretch}{1.2}
+
+\newtheoremstyle{mystyle}
+  {6pt}{15pt}
+  {}
+  {}
+  {\bfseries}
+  {.}
+  {1em}
+  {}
+
+\theoremstyle{mystyle}
+\newtheorem{ex}{Example}
+\newtheorem{pr}{Problem}
+\newtheorem{df}{Definition}
+\newtheorem{thr}{Theorem}
+\newtheorem{pp}{Property}
+
+\begin{document}
+
+\renewcommand{\headrulewidth}{0.4pt}
+\lhead{\leftmark}
+
+\begin{center}
+  \vspace*{2cm}
+  \Huge \textbf{Modern Physics Experiment \\ D2 Optical Pumping}\\
+  \large En-Sheng Deng, Wei-Yu Huang\\
+  date: 2026.03.23、03.30、04.06\\
+  \vspace{1cm}
+
+  % 圖片說明：左為組員A，右為組員B
+\end{center}
+
+\newpage
+
+\input{section/abstract}
+\input{section/optical_pumping_principle}
+\input{section/apparatus_set_up}
+
+%---------------appendix--------------------%
+%\section{Experiment Theory}
+%\input{Theory/1.structure of Alkali atoms}
+%\input{Theory/2.interaction in M-field}
+%input{Theory/3.Photon absorption}
+%\input{Theory/4.OP of Rubidium}
+%\input{Theory/5.Zero field transition}
+%\input{Theory/6.RF spectroscopic}
+%\input{Theory/7.transient eff}
+
+%\section{Apparatus}
+%\input{Apparatus/Rubidium cell}
+%\input{Apparatus/detector}
+%\input{Apparatus/optics}
+%\input{Apparatus/temp regulation}
+%\input{Apparatus/M-field}
+%\input{Apparatus/RF}
+
+%------------------PHY----------------------%
+\input{section/4a}
+\input{section/4b}
+\input{section/4c}
+\input{section/4d}
+
+\input{section/Q_and_A}
+
+\section{Conclusion}
+The four measurements meet the stated objectives and are mutually
+consistent. From the Beer--Lambert fits (Section~1) we obtain
+$\sigma_{\mathrm{exp}} = 1.766(50)\times
+  10^{-16}\,\si{\meter\squared}$, which reproduces the published sample
+value for this apparatus class and is reduced from the theoretical peak
+$\sigma_0 \simeq 10^{-15}\,\si{\meter\squared}$ by the expected
+lamp-to-atom lineshape mismatch. The dominant uncertainty is the
+Table~4A-1 vapour-pressure curve, amplified at low temperature by
+wall-adsorption hysteresis---the reason Run~1 (cold start) is discarded
+from the best-estimate average.
+
+Optically detected magnetic resonance (Section~\ref{sec:4b}) gives a
+slope ratio $m_{87}/m_{85} = 1.554(22)$, fixing the nuclear spins as
+$I_{87} = 3/2$ and $I_{85} = 5/2$ and identifying the two Zeeman dips.
+Combining the isotopes in a single weighted regression yields a
+sweep-coil constant
+$k_{\mathrm{sweep}} = 0.6397(39)\,\si{\gauss\per\ampere}$ with a
+residual ambient field
+$|B_0| = 0.2263(24)\,\si{\gauss}$ along the optical axis,
+cross-checked by the zero-field crossing currents
+$I_{\mathrm{sweep}}^{(0)} = 0.3567(58)\,\si{\ampere}$ and $0.3575(80)\,\si{\ampere}$
+shared by both isotopes. Extending to \SIrange{200}{1000}{\kilo\hertz} with the main
+coils energised gives
+$k_{\mathrm{main}} = 8.579(24)\,\si{\gauss\per\ampere}$ with an
+intercept consistent with zero, so the two calibrations close on
+themselves.
+
+At $B \simeq \SI{7}{\gauss}$ (Section~\ref{sec:4c}) the single low-field
+dip resolves into the Breit--Rabi fan: five lines for $^{87}$Rb (the
+weakest $F=1,\,M{=}{-}1{\to}0$ transition falls below our detection
+threshold) and all ten for $^{85}$Rb. Every matched line agrees with the
+numerical Breit--Rabi prediction at the \SI{0.1}{\%} level, with
+per-isotope mean residuals
+$\overline{\Delta B}_{87} = \SI{-0.02}{\milli\gauss}$ and
+$\overline{\Delta B}_{85} = \SI{+0.01}{\milli\gauss}$---a far stronger
+test of the main-field calibration than the low-field linear-Zeeman
+intercepts admit. The sign-alternating $^{85}$Rb residual pattern is
+the signature of a ${\sim}1\%$ sweep-axis mis-scaling, within the
+$0.6\%$ calibration uncertainty of Eq.~\ref{eq:sweep_cal} and not worth
+re-fitting.
+
+The transient measurements (Section~\ref{sec:4d}) yield an isotopic
+pumping-time ratio $\tau_p^{87}/\tau_p^{85} = 1.20005(22)$ at
+$V_{\mathrm{pp}} = \SI{2}{\volt}$, in $3\%$
+agreement with a Franzen--Emslie rate-equation simulation ($1.164$)
+whose Clebsch--Gordan-weighted absorption rates predict faster pumping
+in $^{85}$Rb because its dominant $F{=}3\!\to\!F'{=}3$ channel is
+stronger and its ``bottleneck'' sublevel pumps faster. The observed
+Rabi-oscillation period follows the expected
+$T = k/V_{\mathrm{rf}} + T_0$ scaling, though the three available
+$V_{\mathrm{pp}}$ settings leave effectively one degree of freedom per
+isotope; denser voltage sampling is the most useful future improvement
+for this sub-experiment.
+
+The dominant systematic limitations are therefore known and quantified:
+the Table~4A-1 density curve (tens of percent over the operating range)
+in Section~1, the CH3-to-$I_{\mathrm{sweep}}$ affine mapping
+(${\sim}\SI{20}{\milli\gauss}$) and main-field-calibration propagation
+in Section~\ref{sec:4c}, and the sparse $V_{\mathrm{pp}}$ grid in
+Section~\ref{sec:4d}. Replacing the lamp-profile absorption measurement
+with a narrow-linewidth laser density calibration, denser
+$V_{\mathrm{pp}}$ sampling, and active temperature regulation (rather
+than heater-off coast) would address each of these in turn. Within
+these limits, every measurement agrees with the Breit--Rabi description
+of the Rb ground state, and the full apparatus---from Helmholtz coil
+geometry through ambient-field cancellation to the vapour cell
+itself---is self-consistent to better than one part in $10^3$.
+
+\section{reference}
+\nocite{*}
+% \printbibliography
+
+\input{section/Appendix}
+\end{document}

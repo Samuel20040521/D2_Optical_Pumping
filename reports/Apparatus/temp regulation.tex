@@ -1,0 +1,129 @@
+\subsection{Temperature Regulation}
+
+The absorption cell is maintained at a stable temperature by a
+Proportional-Integral-Derivative (PID) controller, a Type-T thermocouple, and a
+bifilar-wound resistive heater. The cell is a glass cylinder (outer length 36~mm,
+outer diameter 25~mm, wall thickness $\approx 1.5$~mm) containing rubidium metal
+and 30~torr of neon buffer gas, held in a foam-insulated Plexiglas oven.
+
+\subsubsection*{Rubidium Vapour Pressure and Atomic Density}
+
+The equilibrium vapour pressure of rubidium above its solid or liquid phase follows
+the Clausius-Clapeyron equation :
+\begin{equation}
+    \frac{dP}{dT} = \frac{L\,P}{RT^2}
+\end{equation}
+where $L$ is the molar latent heat of sublimation/vaporisation and $R$ is the universal
+gas constant. Integrating between a reference temperature $T_0$ and temperature $T$ :
+\begin{equation}
+    \ln\frac{P(T)}{P(T_0)} = -\frac{L}{R}\left(\frac{1}{T} - \frac{1}{T_0}\right)
+\end{equation}
+or equivalently :
+\begin{equation}
+    P(T) = P_0\,\exp\!\left[-\frac{L}{R}\left(\frac{1}{T} - \frac{1}{T_0}\right)\right]
+\end{equation}
+The atomic number density $\rho$ is then obtained from the ideal gas law :
+\begin{equation}
+    \rho = \frac{P(T)}{k_B T} = \frac{P_0}{k_B T}
+    \exp\!\left[-\frac{L}{R}\left(\frac{1}{T} - \frac{1}{T_0}\right)\right]
+\end{equation}
+Since $\rho$ appears in the exponent of the Beer-Lambert law, even a small change in
+$T$ produces a large change in the transmitted light intensity. This makes precise
+temperature regulation essential.
+
+\subsubsection*{PID Controller}
+
+The PID controller minimises the error signal $e(t) = T_{\text{set}} - T(t)$ by
+driving the heater with a control output $u(t)$ :
+\begin{equation}
+    u(t) = K_p\,e(t)
+         + K_i\int_0^t e(t')\,dt'
+         + K_d\,\frac{de(t)}{dt}
+\end{equation}
+where $K_p$, $K_i$, and $K_d$ are the proportional, integral, and derivative gains.
+In the frequency domain, the transfer function of the PID controller is :
+\begin{equation}
+    C(s) = K_p\left(1 + \frac{1}{\tau_i s} + \tau_d s\right)
+\end{equation}
+where $\tau_i = K_p/K_i$ is the integral (reset) time and $\tau_d = K_d/K_p$ is the
+derivative (rate) time. The controller is configured with the following parameters :
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{lcc}
+        \hline
+        Parameter & Symbol & Value \\
+        \hline
+        Set point               & $T_{\text{set}}$ & 50.0~$^\circ$C \\
+        Proportional gain       & $K_p$            & 6.2 \\
+        Reset time              & $\tau_i$         & 480~s \\
+        Rate time               & $\tau_d$         & 90.0~s \\
+        Cycle period            & $T_{\text{cyc}}$ & 1~s \\
+        \hline
+    \end{tabular}
+    \caption{PID controller configuration parameters.}
+\end{table}
+
+\subsubsection*{Heater Power and Thermal Equilibrium}
+
+The heater is a bifilar-wound resistive element with resistance $R_h \approx 50\ \Omega$,
+powered by a $+28$~V supply. The maximum heater power is :
+\begin{equation}
+    P_{\text{max}} = \frac{V^2}{R_h} = \frac{28^2}{50} = 15.68\ \text{W}
+\end{equation}
+In steady state, the heater power balances the thermal losses to the environment :
+\begin{equation}
+    P_{\text{heater}} = \kappa_{\text{eff}}\left(T_{\text{set}} - T_{\text{amb}}\right)
+\end{equation}
+where $\kappa_{\text{eff}}$ is the effective thermal conductance of the oven insulation.
+The thermal time constant of the system is :
+\begin{equation}
+    \tau_{\text{th}} = \frac{C_{\text{th}}}{\kappa_{\text{eff}}}
+\end{equation}
+where $C_{\text{th}}$ is the total thermal capacity of the cell and oven assembly. The
+temperature response to a step change in heater power $\Delta P$ is :
+\begin{equation}
+    \Delta T(t) = \frac{\Delta P}{\kappa_{\text{eff}}}
+    \left(1 - e^{-t/\tau_{\text{th}}}\right)
+\end{equation}
+In practice, the system requires 10--20~minutes to reach thermal equilibrium after the
+set point is changed.
+
+\subsubsection*{Thermocouple Sensing}
+
+The temperature is measured by a Type-T (copper--constantan) thermocouple with a
+wire diameter of 5~$\mu$m. The thermoelectric EMF of a Type-T thermocouple is
+approximately :
+\begin{equation}
+    \mathcal{E} = \alpha_T\,(T - T_{\text{ref}})
+\end{equation}
+where $\alpha_T \approx 40\ \mu\text{V}/^\circ\text{C}$ is the Seebeck coefficient for
+Type-T thermocouples and $T_{\text{ref}}$ is the cold-junction reference temperature.
+The thin wire ($5\ \mu$m) is chosen so that the magnetic permeability of constantan has
+negligible effect on the experimental magnetic field.
+
+\subsubsection*{Stability Requirement}
+
+The transmitted light intensity depends on the atomic density as :
+\begin{equation}
+    I = I_0\,e^{-\sigma_0\,\rho(T)\,\ell}
+\end{equation}
+Differentiating with respect to $T$:
+\begin{equation}
+    \frac{dI}{dT} = -\sigma_0\,\ell\,\frac{d\rho}{dT}\cdot I
+\end{equation}
+Using $\rho \propto P(T)/T$ and the Clausius-Clapeyron result :
+\begin{equation}
+    \frac{1}{\rho}\frac{d\rho}{dT} = \frac{L}{RT^2} - \frac{1}{T}
+                                    \approx \frac{L}{RT^2}
+\end{equation}
+for $L/RT \gg 1$. At $T = 320$~K with $L \approx 76$~kJ/mol for rubidium :
+\begin{equation}
+    \frac{1}{\rho}\frac{d\rho}{dT}\bigg|_{320\,\text{K}}
+    \approx \frac{76\times10^3}{8.314\times320^2}
+    \approx 0.089\ \text{K}^{-1}
+\end{equation}
+This means a temperature fluctuation of $\Delta T = 1$~K causes a fractional change
+in density of $\sim 9\%$, which would produce a significant change in the absorbed
+light intensity. The PID controller therefore maintains the temperature to within
+$\pm 0.5$~K to ensure stable operation.
